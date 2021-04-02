@@ -46,6 +46,11 @@ def set_listbox():
     for book_title, _, _ in books:
         listbox.insert(END, book_title)
 
+def write_to_file():
+    with open(DATA_FILE, 'w') as f:
+        for book_title, book_author, complete_date in books:
+            f.write(f"{book_title}|{book_author}|{complete_date}\n")
+
 def save():
     if not title.get() or not author.get():
         return
@@ -55,9 +60,7 @@ def save():
         add_book()
     set_listbox()
     reset()
-    with open(DATA_FILE, 'w') as f:
-        for book_title, book_author, complete_date in books:
-            f.write(f"{book_title}|{book_author}|{complete_date}\n")
+    write_to_file()
 
 def reset():
     title.set('')
@@ -81,7 +84,7 @@ def delete_book():
     del books[selected]
     set_listbox()
     reset()
-    save()
+    write_to_file()
 
 def listbox_callback(event):
     selection = listbox.curselection()
