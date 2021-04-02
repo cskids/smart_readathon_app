@@ -1,11 +1,11 @@
-from tkinter import *
+import tkinter as tk
 
 BG_COLOR = 'SlateGray3'
 
-root = Tk()
-root.geometry('400x400')
-root.config(bg=BG_COLOR)
-root.resizable(0, 0)
-root.title("Smart Readathon Tracker")
+window = tk.Tk()
+window.geometry('400x400')
+window.config(bg=BG_COLOR)
+window.resizable(0, 0)
+window.title("Smart Readathon Tracker")
 
-root.mainloop()
+window.mainloop()
