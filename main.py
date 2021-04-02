@@ -14,11 +14,11 @@ root.resizable(0, 0)
 root.title("Smart Readathon Tracker")
 
 frame = Frame(root)
-frame.pack(side = RIGHT)
+frame.pack(side = BOTTOM)
 
 # scroll bar and text area
 scroll = Scrollbar(frame, orient=VERTICAL)
-listbox = Listbox(frame, yscrollcommand=scroll.set, height=12)
+listbox = Listbox(frame, yscrollcommand=scroll.set, height=12, width=100, exportselection=False, selectmode=SINGLE)
 scroll.config(command=listbox.yview)
 scroll.pack(side=RIGHT, fill=Y)
 listbox.pack(side=LEFT, fill=BOTH, expand=1)
@@ -43,13 +43,21 @@ if Path(DATA_FILE).exists():
 
 def set_listbox():
     listbox.delete(0, END)
-    for title, _, _ in books:
-        listbox.insert(END, title)
+    for book_title, _, _ in books:
+        listbox.insert(END, book_title)
 
 def save():
+    if not title.get() or not author.get():
+        return
+    if listbox.curselection():
+        edit_book()
+    else:
+        add_book()
+    set_listbox()
+    reset()
     with open(DATA_FILE, 'w') as f:
-        for title, author, complete_date in books:
-            f.write(f"{title}|{author}|{complete_date}\n")
+        for book_title, book_author, complete_date in books:
+            f.write(f"{book_title}|{book_author}|{complete_date}\n")
 
 def reset():
     title.set('')
@@ -59,11 +67,33 @@ def reset():
 def add_book():
     today = date.today()
     books.append([title.get(), author.get(), today.strftime("%Y-%m-%d")])
+
+def edit_book():
+    selected = listbox.curselection()[0]
+    read_date = books[selected][2]
+    books[selected] = [title.get(), author.get(), read_date]
+
+def delete_book():
+    selection = listbox.curselection()
+    if not selection:
+        return
+    selected = selection[0]
+    del books[selected]
     set_listbox()
     reset()
     save()
 
-Button(root, text='ADD', font=FONT, bg=BUTTON_COLOR, command=add_book).place(x=50, y=110)
+def listbox_callback(event):
+    selection = listbox.curselection()
+    if selection:
+        book_title, book_author, _ = books[selection[0]]
+        title.set(book_title)
+        author.set(book_author)
+
+listbox.bind("<<ListboxSelect>>", listbox_callback)
+
+Button(root, text='SAVE', font=FONT, bg=BUTTON_COLOR, command=save).place(x=30, y=110)
+Button(root, text='DELETE', font=FONT, bg=BUTTON_COLOR, command=delete_book).place(x=150, y=110)
 
 set_listbox()
 root.mainloop()
