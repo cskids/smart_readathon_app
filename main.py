@@ -28,4 +28,17 @@ Entry(root, textvariable=title).place(x=100, y=20)
 Label(root, text='Author', font=FONT, bg=BG_COLOR).place(x=30, y=70)
 Entry(root, textvariable=author).place(x=130, y=70)
 
+books = []
+
+def set_listbox():
+    listbox.delete(0, END)
+    for title, _ in books:
+        listbox.insert(END, title)
+
+def add_book():
+    books.append([title.get(), author.get()])
+    set_listbox()
+
+Button(root, text='ADD', font=FONT, bg=BUTTON_COLOR, command=add_book).place(x=50, y=110)
+
 root.mainloop()
