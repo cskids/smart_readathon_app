@@ -3,6 +3,7 @@ import tkinter as tk
 from datetime import date
 from pathlib import Path
 from isbn import get_book
+from barcode import get_barcode
 
 # http://www.science.smith.edu/dftwiki/images/3/3d/TkInterColorCharts.png
 BG_COLOR = 'gold'
@@ -74,6 +75,14 @@ def isbn_on_enter(event):
             title_text.set(title)
             author_text.set(author)
 
+def scan_isbn():
+    isbn = get_barcode()
+    title, author = get_book(isbn)
+
+    isbn_text.set(isbn)
+    title_text.set(title)
+    author_text.set(author)
+
 window = tk.Tk()
 window.geometry('400x400')
 window.config(bg=BG_COLOR)
@@ -121,6 +130,7 @@ isbn_entry.bind("<KeyPress>", isbn_on_enter)
 
 tk.Button(window, text='SAVE', font=FONT, bg=BUTTON_COLOR, command=save).place(x=10, y=110)
 tk.Button(window, text='DELETE', font=FONT, bg=BUTTON_COLOR, command=delete_book).place(x=100, y=110)
+tk.Button(window, text='📷', font=FONT, bg=BG_COLOR, command=scan_isbn).place(x=350, y=60)
 
 set_listbox()
 window.mainloop()

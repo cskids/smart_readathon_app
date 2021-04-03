@@ -1,1 +1,4 @@
 isbnlib
+Pillow
+opencv-python
+pyzbar
